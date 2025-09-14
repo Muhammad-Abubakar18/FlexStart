@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Templates - Flex-Start</title>
+    <link rel="stylesheet" href="template.css" />
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        #userMenu {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #userName {
+            color: #333;
+            font-weight: 500;
+        }
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .template-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .template-card:hover {
+            transform: translateY(-5px);
+        }
+        .template-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .template-card h3 {
+            color: #333;
+            margin: 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo"><a href="index.html">Flex-Start</a></div>
+            <ul class="nav-links">
+                <li><a href="Features.html">Features</a></li>
+                <li><a href="template.html" class="active">Templates</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li id="userSection">
+                    <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                    <div id="userMenu" style="display: none;">
+                        <span id="userName"></span>
+                        <a href="logout.php" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="template-section">
+            <h1>Explore Our Resume Templates</h1>
+            <p>Choose from a variety of modern, professional templates built to impress recruiters.</p>
+
+            <div class="templates-grid">
+                <!-- Template Card 1 (First and main one) -->
+                <div class="template-card">
+                    <h3>Modern Classic</h3>
+                    <img src="uploads/template1design.png" alt="Modern Classic Template">
+                    <a href="step1-personal.html" class="btn">Use This Template</a>
+                </div>
+
+                <!-- Template Card 2 -->
+                <div class="template-card">
+                    <h3>Professional Clean</h3>
+                    <img src="professional.jpg" alt="Professional Clean Template">
+                    <a href="step1-personal.html" class="btn">Use This Template</a>
+                </div>
+
+                <!-- Template Card 3 -->
+                <div class="template-card">
+                    <h3>Creative Style</h3>
+                    <img src="creative.jpg" alt="Creative Style Template">
+                    <a href="step1-personal.html" class="btn">Use This Template</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ResumeBuilder</h4>
+                <p>Create professional resumes with ease</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="Features.html">Features</a></li>
+                    <li><a href="template.html">Templates</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <a href="mailto:support@flxstart.com">Send Email to support@flxstart.com</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Flex-start. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check if user is logged in
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch('check_session.php');
+                const data = await response.json();
+                
+                const loginBtn = document.getElementById('loginBtn');
+                const userMenu = document.getElementById('userMenu');
+                const userName = document.getElementById('userName');
+
+                if (data.logged_in) {
+                    // User is logged in
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (userMenu) userMenu.style.display = 'inline-flex';
+                    if (userName) userName.textContent = data.fullname;
+                } else {
+                    // User is not logged in
+                    if (loginBtn) loginBtn.style.display = 'inline-block';
+                    if (userMenu) userMenu.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error checking login status:', error);
+                // Show login button on error
+                const loginBtn = document.getElementById('loginBtn');
+                const userMenu = document.getElementById('userMenu');
+                
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (userMenu) userMenu.style.display = 'none';
+            }
+        }
+
+        // Check login status when page loads
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</body>
+</html>

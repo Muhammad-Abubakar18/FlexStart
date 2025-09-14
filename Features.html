@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="Feature.css" />
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Why Choose Us - Features</title>
+    <style>
+        #userMenu {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #userName {
+            color: #fff;
+            font-weight: 500;
+        }
+        .logout-btn {
+            padding: 8px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo"> <a href="index.html"  style="text-decoration: none; color: inherit;">Flex-Start</a> </div>
+        <ul class="nav-links">
+          <li><a href="Features.html" class="active">Features</a></li>
+          <li><a href="template.html" >Templates</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li id="userSection">
+            <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+            <div id="userMenu" style="display: none;">
+                <span id="userName"></span>
+                <a href="logout.php" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <div class="container">
+        <h1>Why Choose Us?</h1>
+
+        <div class="feature">
+          <h2>🎨 Professional Templates</h2>
+          <p>
+            Choose from dozens of ATS-friendly templates designed to make your
+            resume stand out. Our professionally crafted designs help ensure
+            that your application gets noticed by recruiters.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h2>⚡ Easy to Use</h2>
+          <p>
+            With our simple drag-and-drop interface, creating a resume has never
+            been easier. No technical skills required – just select a template,
+            fill in your details, and you're good to go!
+          </p>
+        </div>
+
+        <div class="feature">
+          <h2>📱 Mobile Friendly</h2>
+          <p>
+            Our platform is fully responsive, allowing you to create and edit
+            your resume from any device, whether it's a laptop, tablet, or
+            smartphone.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h2>💾 Auto-Save</h2>
+          <p>
+            Never lose your progress! Our auto-save feature ensures that your
+            work is always saved, so you can resume editing whenever you want
+            without worrying about losing data.
+          </p>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>ResumeBuilder</h4>
+          <p>Create professional resumes with ease</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="Features.html">Features</a></li>
+            <li><a href="template.html">Templates</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="login.html">Login</a></li>
+
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <a href="mailto:support@flxstart.com"
+            >Send Email to support@flxstart.com</a
+          >
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Flex-start. All rights reserved.</p>
+      </div>
+    </footer>
+    <script>
+        // Check login status when page loads
+        function checkLoginStatus() {
+            fetch('check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    const loginBtn = document.getElementById('loginBtn');
+                    const userMenu = document.getElementById('userMenu');
+                    const userName = document.getElementById('userName');
+                    
+                    if (data.logged_in) {
+                        loginBtn.style.display = 'none';
+                        userMenu.style.display = 'inline-flex';
+                        userName.textContent = data.fullname;
+                    } else {
+                        loginBtn.style.display = 'inline-block';
+                        userMenu.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking login status:', error);
+                });
+        }
+
+        // Check login status when page loads
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+  </body>
+</html>

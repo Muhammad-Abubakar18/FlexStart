@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Step 7 - Download</title>
+  <link rel="stylesheet" href="step7-download.css" />
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav>
+      <div class="logo"><a href="#">FlexStart</a></div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Templates</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#" class="login-btn">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Step Navigation -->
+  <div class="step-nav">
+    <a href="step1-personal.html#Personal_form_section" class="step active">Personal</a>
+    <a href="step1-personal.html#Edu_form_section" class="step">Education</a>
+    <a href="step1-personal.html#Exp_form_section" class="step">Experience</a>
+    <a href="step1-personal.html#Skills_form_section" class="step">Skills</a>
+    <a href="step1-personal.html#Extra_form_section" class="step">Extra</a>
+    <a href="step1-personal.html#Summary_form_section" class="step">Summary</a>
+    <a href="step6-review.html" class="step">Review</a>
+    <a href="step7-download.html" class="step">Download</a>
+  </div>
+
+
+  <!-- Resume Preview Section -->
+  <section class="form-section">
+    <h2>Your Resume</h2>
+    <div id="resumePreview" class="resume-preview">
+      <!-- Filled by JavaScript -->
+    </div>
+
+    <div class="form-buttons">
+      <a href="step6-review.html" class="btn back">← Back</a>
+      <button onclick="downloadResume()" class="btn next">Download PDF</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">Company</a></li>
+          <li><a href="#">Team</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 FlexStart. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

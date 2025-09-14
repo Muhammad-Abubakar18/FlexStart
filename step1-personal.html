@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Resume - Flex Start</title>
+  <link rel="stylesheet" href="step1-personal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Step Navigation Styles */
+    .step-nav {
+      background-color: #0a3d62;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      
+      top: 70px;
+      z-index: 999;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .step {
+      color: #fff;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .step:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .step.active {
+      background-color: #4fc3f7;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .education-entry {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    .remove-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .add-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .profile-pic-container {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .profile-pic-preview {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #0d6efd;
+      position: relative;
+    }
+
+    .profile-pic-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-pic-upload {
+      flex: 1;
+    }
+
+    .upload-btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background: #0d6efd;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-btn:hover {
+      background: #0b5ed7;
+    }
+
+    #profile-pic {
+      display: none;
+    }
+
+    .upload-hint {
+      margin-top: 0.5rem;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      position: relative;
+      background: white;
+      margin: 2% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 8px;
+    }
+
+    .close-modal {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .image-editor {
+      max-height: 70vh;
+      overflow: hidden;
+    }
+
+    .editor-controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .editor-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .rotate-btn {
+      background: #6c757d;
+      color: white;
+    }
+
+    .crop-btn {
+      background: #0d6efd;
+      color: white;
+    }
+
+    .cancel-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .profile-pic-container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-pic-preview {
+        margin: 0 auto;
+      }
+
+      .modal-content {
+        margin: 5% auto;
+        width: 95%;
+      }
+    }
+
+    /* Add styles for loading and error states */
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+
+    .error {
+      color: #dc3545;
+      padding: 10px;
+      border: 1px solid #dc3545;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    /* Style for required field errors */
+    input.error, textarea.error, select.error {
+      border-color: #dc3545;
+    }
+
+    /* Download button styles */
+    .download-btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .download-btn.pdf {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .download-btn.doc {
+      background-color: #0d6efd;
+      color: white;
+    }
+
+    .download-btn:hover {
+      opacity: 0.9;
+    }
+
+    .download-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Edit button styles */
+    .edit-btn {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .edit-btn:hover {
+      background-color: #218838;
+    }
+
+    /* Submit button styles */
+    .submit-btn {
+      padding: 12px 24px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover {
+      background-color: #218838;
+    }
+
+    .submit-btn:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+
+    .submit-btn i {
+      font-size: 1.1em;
+    }
+
+    /* Form validation styles */
+    .error {
+      border-color: #dc3545 !important;
+    }
+
+    .error-message {
+      color: #dc3545;
+      font-size: 0.875em;
+      margin-top: 4px;
+    }
+
+    .resume-template {
+      display: flex;
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .resume-sidebar {
+      background: #0a3d62;
+      color: #fff;
+      width: 260px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .resume-sidebar .profile-pic img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      margin-bottom: 16px;
+    }
+    .resume-sidebar h2 {
+      margin: 0;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .resume-sidebar h4 {
+      margin: 8px 0 24px 0;
+      font-size: 1.1em;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+    .resume-sidebar .contact-info {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+      font-size: 0.95em;
+    }
+    .resume-sidebar .contact-info li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    .resume-sidebar .contact-info i {
+      margin-right: 8px;
+    }
+    .resume-sidebar .skills {
+      margin-top: 24px;
+    }
+    .resume-sidebar .skills h5 {
+      margin-bottom: 8px;
+      font-size: 1em;
+      font-weight: bold;
+    }
+    .resume-sidebar .skills ul {
+      list-style: disc inside;
+      padding: 0;
+      margin: 0;
+    }
+    .resume-main {
+      flex: 1;
+      padding: 32px 32px 32px 40px;
+      background: #f8f9fa;
+    }
+    .resume-main .section {
+      margin-bottom: 32px;
+    }
+    .resume-main h3 {
+      color: #0a3d62;
+      margin-bottom: 12px;
+      font-size: 1.2em;
+      border-bottom: 1px solid #e1e1e1;
+      padding-bottom: 4px;
+    }
+
+    #userMenu {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #userName {
+      color: #fff;
+      font-weight: 500;
+    }
+    .logout-btn {
+      padding: 8px 15px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="logo"><a href="index.html">Flex-Start</a></div>
+      <ul>
+        <div class="nav-links">
+          <li><a href="Features.html">Features</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="template.html">Template</a></li>
+          <li id="userSection">
+            <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+            <div id="userMenu" style="display: none;">
+              <span id="userName"></span>
+              <a href="logout.php" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </div>
+          </li>
+        </div>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="step-nav">
+    <a href="#Personal_form_section" class="step active">Personal</a>
+    <a href="#Edu_form_section" class="step">Education</a>
+    <a href="#Exp_form_section" class="step">Experience</a>
+    <a href="#Skills_form_section" class="step">Skills</a>
+    <a href="#Extra_form_section" class="step">Extra</a>
+    <a href="#Summary_form_section" class="step">Summary</a>
+    <a href="#Review_form_section" class="step">Review</a>
+    <a href="#Download_form_section" class="step">Download</a>
+  </div>
+
+  <main>
+    <form id="resumeForm" action="save_resume.php" method="post" enctype="multipart/form-data">
+      <input type="hidden" id="resume_id" name="resume_id" value="">
+      <!-- Personal Information Section -->
+      <section id="Personal_form_section" class="form-section active">
+        <h2><i class="fas fa-user"></i> Personal Information</h2>
+        <div class="profile-pic-container">
+          <div class="profile-pic-preview">
+            <img id="profile-preview" src="profilepic1.jpeg" alt="Profile Preview">
+          </div>
+          <div class="profile-pic-upload">
+            <label for="profile-pic" class="upload-btn">Upload Profile Picture</label>
+            <input type="file" id="profile-pic" name="profile_pic" accept="image/*" onchange="openImageEditor(this)">
+            <p class="upload-hint">Recommended size: 200x200 pixels</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="e.g. John Doe" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="e.g. john@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="e.g. (123) 456-7890" required />
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" placeholder="e.g. 123 Main St, City, Country" />
+        </div>
+        <div class="form-group">
+          <label for="jobField">Job Field / Position</label>
+          <input type="text" id="jobField" name="jobField" placeholder="e.g. Software Developer, Marketing Manager" required />
+        </div>
+      </section>
+
+      <!-- Education Section -->
+      <section id="Edu_form_section" class="form-section">
+        <h2><i class="fas fa-graduation-cap"></i> Education Details</h2>
+        <div id="education-entries">
+          <div class="education-entry">
+            <div class="form-group">
+              <label for="degree">Degree / Program</label>
+              <input type="text" id="degree" name="degree[]" placeholder="e.g. Bachelor of Science in Computer Science"
+                required />
+            </div>
+
+            <div class="form-group">
+              <label for="university">University / College</label>
+              <input type="text" id="university" name="university[]" placeholder="e.g. ABC University" required />
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" id="location" name="location[]" placeholder="City, Country" required />
+            </div>
+
+            <div class="form-group">
+              <label for="grad-year">Graduation Year</label>
+              <input type="text" id="grad-year" name="grad-year[]" placeholder="e.g. 2024" required />
+            </div>
+            <button type="button" class="remove-btn" onclick="removeEducationEntry(this)">Remove</button>
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addEducationEntry()">+ Add Another Education</button>
+      </section>
+
+      <!-- Experience Section -->
+      <section id="Exp_form_section" class="form-section">
+        <h2><i class="fas fa-briefcase"></i> Experience Details</h2>
+        <div id="experience-entries">
+          <div class="experience-entry">
+            <div class="form-group">
+              <label for="jobTitle">Job Title</label>
+              <input type="text" id="jobTitle" name="jobTitle[]" required />
+            </div>
+            <div class="form-group">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company[]" required />
+            </div>
+            <div class="form-group">
+              <label for="duration">Duration</label>
+              <input type="text" id="duration" name="duration[]" placeholder="e.g. Jan 2022 - Dec 2023" required />
+            </div>
+            <div class="form-group">
+              <label for="description">Work Description</label>
+              <textarea id="description" name="description[]" rows="4" required></textarea>
+            </div>
+            <button type="button" class="remove-btn" onclick="removeExperienceEntry(this)">Remove</button>
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addExperienceEntry()">+ Add Another Experience</button>
+      </section>
+
+      <!-- Skills Section -->
+      <section id="Skills_form_section" class="form-section">
+        <h2><i class="fas fa-tools"></i> Skills</h2>
+        <div id="skillsList">
+          <div class="form-group">
+            <label for="skill1">Skill 1</label>
+            <input type="text" id="skill1" name="skills[]" placeholder="Enter a skill" required />
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addSkillField()">+ Add Another Skill</button>
+      </section>
+
+      <!-- Additional Information Section -->
+      <section id="Extra_form_section" class="form-section">
+        <h2><i class="fas fa-plus-circle"></i> Additional Information</h2>
+        <div class="form-group">
+          <h3><i class="fas fa-language"></i> Languages</h3>
+          <div id="languages-list">
+            <div class="language-entry">
+              <input type="text" name="languages[]" placeholder="e.g. English" required />
+              <select name="language-level[]" required>
+                <option value="">Select Level</option>
+                <option value="Native">Native</option>
+                <option value="Fluent">Fluent</option>
+                <option value="Advanced">Advanced</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Basic">Basic</option>
+              </select>
+              <button type="button" class="remove-btn" onclick="removeLanguageEntry(this)">Remove</button>
+            </div>
+          </div>
+          <button type="button" class="add-btn" onclick="addLanguageEntry()">+ Add Language</button>
+        </div>
+
+        <div class="form-group">
+          <h3><i class="fas fa-heart"></i> Activities & Interests</h3>
+          <div id="activities-list">
+            <div class="activity-entry">
+              <input type="text" name="activities[]" placeholder="e.g. Volunteer Work, Sports, etc." required />
+              <button type="button" class="remove-btn" onclick="removeActivityEntry(this)">Remove</button>
+            </div>
+          </div>
+          <button type="button" class="add-btn" onclick="addActivityEntry()">+ Add Activity</button>
+        </div>
+      </section>
+
+      <!-- Professional Summary Section -->
+      <section id="Summary_form_section" class="form-section">
+        <h2><i class="fas fa-file-alt"></i> Professional Summary</h2>
+        <div class="form-group">
+          <label for="summary">Write a brief professional summary or career objective:</label>
+          <textarea id="summary" name="summary" rows="6"
+            placeholder="e.g., A passionate software developer with 3+ years of experience..."></textarea>
+        </div>
+      </section>
+
+      <!-- Review Section -->
+      <section id="Review_form_section" class="form-section">
+        <h2><i class="fas fa-eye"></i> Review Your Resume</h2>
+        <div class="review-container">
+          <div class="preview-section">
+            <h3>Preview</h3>
+            <div id="resume-preview" class="resume-preview">
+              <div class="resume-template">
+                <div class="resume-sidebar">
+                  <div class="profile-pic">
+                    <img src="" alt="Profile Picture" id="review-profile-pic">
+                  </div>
+                  <h2>NAME</h2>
+                  <h4>JOB TITLE</h4>
+                  <ul class="contact-info">
+                    <li><i class="fa fa-linkedin"></i> LINKEDIN</li>
+                    <li><i class="fa fa-envelope"></i> EMAIL</li>
+                    <li><i class="fa fa-phone"></i> PHONE</li>
+                    <li><i class="fa fa-globe"></i> WEBSITE</li>
+                  </ul>
+                  <div class="skills">
+                    <h5>Relevant Skills</h5>
+                    <ul>
+                      <li>Skill 1</li>
+                      <li>Skill 2</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="resume-main">
+                  <div class="section">
+                    <h3>Work Experience</h3>
+                    <!-- Experience entries here -->
+                  </div>
+                  <div class="section">
+                    <h3>Education History</h3>
+                    <!-- Education entries here -->
+                  </div>
+                  <div class="section">
+                    <h3>Certifications</h3>
+                    <!-- Certifications here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-buttons">
+            <button type="button" class="btn edit-btn" onclick="editResume()">
+              <i class="fas fa-edit"></i> Edit Resume
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Download Section -->
+      <section id="Download_form_section" class="form-section">
+        <h2><i class="fas fa-download"></i> Download Your Resume</h2>
+        <div class="download-container">
+          <div class="download-options">
+            <h3>Choose Format</h3>
+            <div class="format-buttons">
+              <button type="button" class="download-btn pdf" onclick="downloadPDF()">
+                <i class="fas fa-file-pdf"></i> Download PDF
+              </button>
+             
+            </div>
+          </div>
+          <div class="download-preview">
+            <h3>Final Preview</h3>
+            <div id="final-preview" class="resume-preview">
+              <!-- Final resume preview will be shown here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Button - Only one submit button at the end of the form -->
+      <div class="form-buttons" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button type="submit" class="submit-btn" onclick="submitResumeData(event)">
+          <i class="fas fa-save"></i> Save Resume
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- Image Editor Modal -->
+  <div id="imageEditorModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeImageEditor()">&times;</span>
+      <div class="image-editor">
+        <img id="imageToEdit" src="" alt="Image to edit">
+      </div>
+      <div class="editor-controls">
+        <button class="editor-btn rotate-btn" onclick="rotateImage()">Rotate</button>
+        <button class="editor-btn crop-btn" onclick="cropImage()">Crop & Save</button>
+        <button class="editor-btn cancel-btn" onclick="closeImageEditor()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>ResumeBuilder</h4>
+        <p>Create professional resumes with ease</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="Features.html">Features</a></li>
+          <li><a href="template.html">Templates</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <a href="mailto:support@flxstart.com">support@flxstart.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Flex-start. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Navigation between sections
+    document.querySelectorAll('.step').forEach(step => {
+      step.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = step.getAttribute('href').substring(1);
+        
+        // Hide all sections
+        document.querySelectorAll('.form-section').forEach(section => {
+          section.style.display = 'none';
+        });
+        
+        // Show target section
+        document.getElementById(targetId).style.display = 'block';
+        
+        // Update active state in navigation
+        document.querySelectorAll('.step').forEach(s => {
+          s.classList.remove('active');
+        });
+        step.classList.add('active');
+      });
+    });
+
+    // Show only the first section initially
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.form-section').forEach((section, index) => {
+        section.style.display = index === 0 ? 'block' : 'none';
+      });
+    });
+
+    // Add/Remove Education Entry
+    function addEducationEntry() {
+      const template = document.querySelector('.education-entry').cloneNode(true);
+      template.querySelectorAll('input').forEach(input => input.value = '');
+      document.getElementById('education-entries').appendChild(template);
+    }
+
+    function removeEducationEntry(button) {
+      const entries = document.querySelectorAll('.education-entry');
+      if (entries.length > 1) {
+        button.closest('.education-entry').remove();
+      }
+    }
+
+    // Add/Remove Experience Entry
+    function addExperienceEntry() {
+      const template = document.querySelector('.experience-entry').cloneNode(true);
+      template.querySelectorAll('input, textarea').forEach(input => input.value = '');
+      document.getElementById('experience-entries').appendChild(template);
+    }
+
+    function removeExperienceEntry(button) {
+      const entries = document.querySelectorAll('.experience-entry');
+      if (entries.length > 1) {
+        button.closest('.experience-entry').remove();
+      }
+    }
+
+    // Add/Remove Language Entry
+    function addLanguageEntry() {
+      const template = document.querySelector('.language-entry').cloneNode(true);
+      template.querySelectorAll('input').forEach(input => input.value = '');
+      template.querySelector('select').selectedIndex = 0;
+      document.getElementById('languages-list').appendChild(template);
+    }
+
+    function removeLanguageEntry(button) {
+      const entries = document.querySelectorAll('.language-entry');
+      if (entries.length > 1) {
+        button.closest('.language-entry').remove();
+      }
+    }
+
+    // Add/Remove Activity Entry
+    function addActivityEntry() {
+      const template = document.querySelector('.activity-entry').cloneNode(true);
+      template.querySelector('input').value = '';
+      document.getElementById('activities-list').appendChild(template);
+    }
+
+    function removeActivityEntry(button) {
+      const entries = document.querySelectorAll('.activity-entry');
+      if (entries.length > 1) {
+        button.closest('.activity-entry').remove();
+      }
+    }
+
+    // Add Skill Field
+    function addSkillField() {
+      const skillsList = document.getElementById('skillsList');
+      const newSkill = document.createElement('div');
+      newSkill.className = 'form-group';
+      const skillCount = skillsList.children.length + 1;
+      newSkill.innerHTML = `
+        <label for="skill${skillCount}">Skill ${skillCount}</label>
+        <input type="text" id="skill${skillCount}" name="skills[]" placeholder="Enter a skill" required />
+      `;
+      skillsList.appendChild(newSkill);
+    }
+
+    // Image Editor Functions
+    let cropper;
+    let currentFile;
+
+    function openImageEditor(input) {
+      if (input.files && input.files[0]) {
+        currentFile = input.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const modal = document.getElementById('imageEditorModal');
+          const image = document.getElementById('imageToEdit');
+          image.src = e.target.result;
+          
+          modal.style.display = 'block';
+          
+          image.onload = function() {
+            if (cropper) {
+              cropper.destroy();
+            }
+            cropper = new Cropper(image, {
+              aspectRatio: 1,
+              viewMode: 1,
+              dragMode: 'move',
+              autoCropArea: 1,
+              restore: false,
+              guides: true,
+              center: true,
+              highlight: false,
+              cropBoxMovable: true,
+              cropBoxResizable: true,
+              toggleDragModeOnDblclick: false,
+            });
+          };
+        }
+        
+        reader.readAsDataURL(currentFile);
+      }
+    }
+
+    function closeImageEditor() {
+      const modal = document.getElementById('imageEditorModal');
+      modal.style.display = 'none';
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
+      }
+    }
+
+    function rotateImage() {
+      if (cropper) {
+        cropper.rotate(90);
+      }
+    }
+
+    function cropImage() {
+      if (cropper) {
+        const canvas = cropper.getCroppedCanvas({
+          width: 200,
+          height: 200
+        });
+        
+        // Update preview image
+        const previewImg = document.getElementById('profile-preview');
+        previewImg.src = canvas.toDataURL();
+        
+        // Update review section image if it exists
+        const reviewImg = document.getElementById('review-profile-pic');
+        if (reviewImg) {
+          reviewImg.src = canvas.toDataURL();
+        }
+        
+        canvas.toBlob(function(blob) {
+          const file = new File([blob], currentFile.name, {
+            type: currentFile.type,
+            lastModified: new Date().getTime()
+          });
+          
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          document.getElementById('profile-pic').files = dataTransfer.files;
+          
+          // Trigger form update to refresh preview
+          updatePreview();
+        }, currentFile.type);
+        
+        closeImageEditor();
+      }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('imageEditorModal');
+      if (event.target == modal) {
+        closeImageEditor();
+      }
+    }
+
+    // Function to download PDF
+    function downloadPDF() {
+      const button = document.querySelector('.download-btn.pdf');
+      const originalText = button.innerHTML;
+      
+      // Disable button and show loading state
+      button.disabled = true;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+
+      // Get form data
+      const formData = new FormData();
+      const resumeId = document.getElementById('resume_id').value;
+      
+      if (!resumeId) {
+        alert('Please save your resume first before downloading');
+        button.disabled = false;
+        button.innerHTML = originalText;
+        return;
+      }
+      
+      formData.append('resume_id', resumeId);
+
+      // Send request to generate PDF
+      fetch('generate_pdf.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.message || 'Failed to generate PDF');
+          });
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        if (blob.type === 'application/json') {
+          // If we got JSON back, it's an error
+          return blob.text().then(text => {
+            const error = JSON.parse(text);
+            throw new Error(error.message || 'Failed to generate PDF');
+          });
+        }
+        
+        // Create and trigger download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'resume.pdf';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error generating PDF: ' + error.message);
+      })
+      .finally(() => {
+        // Reset button state
+        button.disabled = false;
+        button.innerHTML = originalText;
+      });
+    }
+
+
+    // Function to get resume ID from the last saved resume
+    function getResumeId() {
+      // This should return the ID of the last saved resume
+      // You might want to store this in a hidden input field or localStorage
+      return document.getElementById('resume_id').value;
+    }
+
+    // Function to handle resume editing
+    function editResume() {
+      // Get the current section
+      const currentSection = document.querySelector('.form-section[style="display: block;"]');
+      if (currentSection) {
+        // Find the corresponding navigation link
+        const sectionId = currentSection.id;
+        const navLink = document.querySelector(`.step[href="#${sectionId}"]`);
+        if (navLink) {
+          // Remove active class from all sections
+          document.querySelectorAll('.form-section').forEach(section => {
+            section.style.display = 'none';
+          });
+          // Show the current section
+          currentSection.style.display = 'block';
+          // Update navigation active state
+          document.querySelectorAll('.step').forEach(step => {
+            step.classList.remove('active');
+          });
+          navLink.classList.add('active');
+        }
+      }
+    }
+
+    // Function to update preview
+    function updatePreview() {
+      const formData = new FormData(document.getElementById('resumeForm'));
+      
+      // Show loading state in preview
+      const previewContainer = document.getElementById('resume-preview');
+      previewContainer.innerHTML = '<div class="loading">Updating preview...</div>';
+
+      fetch('preview_resume.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(html => {
+        previewContainer.innerHTML = html;
+        // Also update final preview if it exists
+        const finalPreview = document.getElementById('final-preview');
+        if (finalPreview) {
+          finalPreview.innerHTML = html;
+        }
+        
+        // Update profile picture in review section
+        const profilePicUrl = document.getElementById('profile_pic_url').value;
+        const reviewProfilePic = document.getElementById('review-profile-pic');
+        if (reviewProfilePic && profilePicUrl) {
+          reviewProfilePic.src = profilePicUrl;
+        }
+      })
+      .catch(error => {
+        console.error('Error updating preview:', error);
+        previewContainer.innerHTML = '<div class="error">Error updating preview. Please try again.</div>';
+      });
+    }
+
+    // Add event listeners for form changes
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add change event listeners to all form inputs
+      const formInputs = document.querySelectorAll('#resumeForm input, #resumeForm textarea, #resumeForm select');
+      formInputs.forEach(input => {
+        input.addEventListener('change', updatePreview);
+      });
+
+      // Initial preview update
+      updatePreview();
+
+      // Add click event listeners to download buttons
+      const pdfButton = document.querySelector('.download-btn.pdf');
+      if (pdfButton) {
+        pdfButton.onclick = function(e) {
+          e.preventDefault();
+          downloadPDF();
+        };
+      }
+
+      // Add click event listener to edit button
+      const editButton = document.querySelector('.edit-btn');
+      if (editButton) {
+        editButton.addEventListener('click', editResume);
+      }
+    });
+
+    // Function to submit resume data to database
+    function submitResumeData(event) {
+      event.preventDefault();
+      
+      // Validate form first
+      if (!validateForm()) {
+        return;
+      }
+      
+      // Show loading state
+      const submitButton = document.querySelector('.submit-btn');
+      const originalText = submitButton.innerHTML;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      submitButton.disabled = true;
+
+      // Get all form data
+      const formData = new FormData(document.getElementById('resumeForm'));
+
+      // Add timestamp
+      formData.append('timestamp', new Date().getTime());
+
+      // Send data to server
+      fetch('save_resume.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Store the resume ID
+          document.getElementById('resume_id').value = data.resume_id;
+          
+          // Show success message
+          alert('Resume saved successfully!');
+          
+          // Update preview
+          updatePreview();
+          
+          // Enable download buttons
+          const downloadBtns = document.querySelectorAll('.download-btn');
+          downloadBtns.forEach(btn => btn.disabled = false);
+        } else {
+          throw new Error(data.message || 'Failed to save resume');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving resume: ' + error.message);
+      })
+      .finally(() => {
+        // Reset button state
+        submitButton.innerHTML = originalText;
+        submitButton.disabled = false;
+      });
+    }
+
+    // Add form validation before submission
+    function validateForm() {
+      const requiredFields = document.querySelectorAll('#resumeForm [required]');
+      let isValid = true;
+      let firstInvalidField = null;
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          isValid = false;
+          field.classList.add('error');
+          if (!firstInvalidField) {
+            firstInvalidField = field;
+          }
+        } else {
+          field.classList.remove('error');
+        }
+      });
+
+      if (!isValid) {
+        alert('Please fill in all required fields');
+        if (firstInvalidField) {
+          firstInvalidField.focus();
+        }
+        return false;
+      }
+
+      return true;
+    }
+
+    // Update form submission to include validation
+    document.getElementById('resumeForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      submitResumeData(event);
+    });
+
+    // Check login status and redirect if not logged in
+    async function checkLoginAndRedirect() {
+      try {
+        const response = await fetch('check_session.php');
+        const data = await response.json();
+        
+        const loginBtn = document.getElementById('loginBtn');
+        const userMenu = document.getElementById('userMenu');
+        const userName = document.getElementById('userName');
+        const formSections = document.querySelectorAll('.form-section');
+        const stepNav = document.querySelector('.step-nav');
+
+        if (data.logged_in) {
+          // User is logged in
+          if (loginBtn) loginBtn.style.display = 'none';
+          if (userMenu) userMenu.style.display = 'inline-flex';
+          if (userName) userName.textContent = data.fullname;
+          // Show the form sections
+          formSections.forEach(section => {
+            section.style.display = 'block';
+          });
+          if (stepNav) stepNav.style.display = 'flex';
+        } else {
+          // User is not logged in
+          if (loginBtn) loginBtn.style.display = 'inline-block';
+          if (userMenu) userMenu.style.display = 'none';
+          // Hide the form sections
+          formSections.forEach(section => {
+            section.style.display = 'none';
+          });
+          if (stepNav) stepNav.style.display = 'none';
+          
+          // Show alert and redirect
+          alert('Please login to create a resume');
+          window.location.href = 'login.html';
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+        // Show login button on error
+        const loginBtn = document.getElementById('loginBtn');
+        const userMenu = document.getElementById('userMenu');
+        
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        if (userMenu) userMenu.style.display = 'none';
+      }
+    }
+
+    // Check login status when page loads
+    document.addEventListener('DOMContentLoaded', checkLoginAndRedirect);
+
+    // Add login check to form submission
+    document.getElementById('resumeForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      
+      try {
+        const response = await fetch('check_session.php');
+        const data = await response.json();
+        
+        if (!data.logged_in) {
+          alert('Please login to create a resume');
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        // If logged in, proceed with form submission
+        submitResumeData(event);
+      } catch (error) {
+        console.error('Error checking login status:', error);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  </script>
+</body>
+
+</html>

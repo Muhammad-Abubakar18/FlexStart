@@ -1,0 +1,166 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fc;
+    color: #333;
+}
+
+header {
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #0d6efd;
+}
+
+.login-btn {
+    background-color: #2563eb;
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.template-section {
+    padding: 100px 5% 60px;
+    text-align: center;
+}
+
+.template-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.template-section p {
+    color: gray;
+    margin-bottom: 40px;
+}
+
+.templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.template-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.template-card img {
+    width: 240px;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+
+.template-card h3 {
+    margin: 15px 0;
+    font-size: 18px;
+}
+
+.template-card .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.template-card .btn:hover {
+    background: #1e40af;
+}
+
+/* Footer */
+footer {
+    background-color: #1e293b;
+    color: white;
+    padding: 4rem 5% 2rem;
+    margin-top: 50px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section h4 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #334155;
+    color: #94a3b8;
+}

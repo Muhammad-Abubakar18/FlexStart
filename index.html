@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flex-Start</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="Home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        #userMenu {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #userName {
+            color: #fff;
+            font-weight: 500;
+        }
+        .logout-btn {
+            padding: 8px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Flex-Start</div>
+            <ul class="nav-links">
+                <li><a href="Features.html">Features</a></li>
+                <li><a href="template.html">Templates</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li id="userSection">
+                    <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                    <div id="userMenu" style="display: none;">
+                        <span id="userName"></span>
+                        <a href="logout.php" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Create Your Professional Resume in Minutes</h1>
+                <p>Build a stunning resume with our easy-to-use builder. Choose from professional templates and get hired faster.</p>
+                <button class="cta-button" onclick="window.location.href='template.html'">
+                    <i class="fas fa-file-alt"></i> Create Your Resume
+                </button>
+            </div>
+            <div class="hero-image">
+                <div class="resume-preview"> 
+                    <video src="15929594.mp4" loop autoplay muted width="495px" height="300px"></video>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Why Choose Us</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-paint-brush"></i></div>
+                    <h3>Professional Templates</h3>
+                    <p>Choose from dozens of ATS-friendly templates</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Easy to Use</h3>
+                    <p>Simple drag-and-drop interface</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Create and edit on any device</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-save"></i></div>
+                    <h3>Auto-Save</h3>
+                    <p>Never lose your progress</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ResumeBuilder</h4>
+                <p>Create professional resumes with ease</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="Features.html">Features</a></li>
+                    <li><a href="template.html">Templates</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <a href="mailto:support@flxstart.com">
+                    <i class="fas fa-envelope"></i> support@flxstart.com
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Flex-start. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check login status when page loads
+        function checkLoginStatus() {
+            fetch('check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    const loginBtn = document.getElementById('loginBtn');
+                    const userMenu = document.getElementById('userMenu');
+                    const userName = document.getElementById('userName');
+                    
+                    if (data.logged_in) {
+                        loginBtn.style.display = 'none';
+                        userMenu.style.display = 'inline-flex';
+                        userName.textContent = data.fullname;
+                    } else {
+                        loginBtn.style.display = 'inline-block';
+                        userMenu.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking login status:', error);
+                });
+        }
+
+        // Check login status when page loads
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</body>
+</html> 
